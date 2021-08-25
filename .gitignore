@@ -1,0 +1,7 @@
+#General files
+node_modules
+secrets.json
+
+#Hardhat files
+cache
+artifacts

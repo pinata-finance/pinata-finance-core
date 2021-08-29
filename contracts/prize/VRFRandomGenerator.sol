@@ -70,8 +70,8 @@ contract VRFRandomGenerator is VRFConsumerBase, Ownable {
         public
         VRFConsumerBase(_vrfCoordinator, _linkToken)
     {
-        keyHash = 0xc251acd21ec4fb7f31bb8868288bfdbaeb4fbfec2df3735ddbd4f7dc8d60103c;
-        fee = 0.2 * 10**18; // 0.2 LINK (Varies by network)
+        keyHash = 0xf86195cf7690c55907b2b611ebb7343a6f649bff128701cc542f0569e2c549da;
+        fee = 0.0001 * 10**18;
     }
 
     /**

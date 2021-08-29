@@ -5,6 +5,8 @@ options = {
 	gasPrice: ethers.utils.parseUnits('50.0', 'gwei'),
 };
 
+const adminWallet = '0xeE3995EBb427FCd8B012D2a66d1c37Eb4B2F7d03';
+
 const tokenAddress = {
 	ice: '0x4A81f8796e0c6Ad4877A51C86693B0dE8093F2ef', //ICE
 	usdc: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
@@ -20,9 +22,9 @@ const contractsAddress = {
 };
 
 async function main() {
-	const [deployer] =
-		await ethers.getSigners();
+	const [deployer] = await ethers.getSigners();
 
+	console.log(`deployer address: ${deployer.address}`);
 	console.log(
 		`before deploy: ${await ethers.provider.getBalance(deployer.address)}`
 	);
@@ -69,7 +71,7 @@ async function main() {
 		options
 	);
 
-	//! Random Generator
+	// Random Generator
 	const RNGenerator = await ethers.getContractFactory('VRFRandomGenerator');
 	const rnGenerator = await RNGenerator.deploy(
 		contractsAddress.vrfCoordinate,
@@ -106,15 +108,20 @@ async function main() {
 
 	await pinataManager.setPrizePool(prizePool.address, options);
 	await pinataManager.setRandomNumberGenerator(rnGenerator.address, options);
-	await pinataManager.setStrategist(deployer.address, options);
-	await pinataManager.setPinataFeeRecipient(
-		deployer.address,
-		options
-	);
+
+	await pinataManager.setStrategist(adminWallet, options);
+	await pinataManager.setPendingManager(adminWallet, options);
+	await pinataManager.setPinataFeeRecipient(adminWallet, options);
 
 	console.log(
 		`after deploy: ${await ethers.provider.getBalance(deployer.address)}`
 	);
+
+	console.log(`PinataManager: ${pinataManager.address}`)
+	console.log(`Vault: ${vault.address}`)
+	console.log(`Strategy: ${strategy.address}`)
+	console.log(`PrizePool: ${prizePool.address}`)
+	console.log(`Random Generator: ${rnGenerator.address}`)
 
 	/* Verify deployed contracts */
 	await hre.run('verify:verify', {
@@ -130,7 +137,7 @@ async function main() {
 		],
 	});
 	await hre.run('verify:verify', {
-		address: strategyCakeLP.address,
+		address: strategy.address,
 		constructorArguments: [
 			tokenAddress.ice,
 			tokenAddress.is3Usd,

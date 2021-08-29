@@ -2,7 +2,7 @@ require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-ethers');
 require('@nomiclabs/hardhat-etherscan');
 
-const { etherScanApiKey, alchemyApiKey } = require('./secrets.json');
+const { etherScanApiKey, alchemyApiKey, mnemonic } = require('./secrets.json');
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -29,6 +29,17 @@ module.exports = {
                 url: `https://polygon-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
             },
         },
+        polygon_mainnet: {
+            url: 'https://rpc-mainnet.maticvigil.com',
+            chainId: 137,
+            accounts: { mnemonic: mnemonic },
+        },
+        polygon_testnet: {
+            url: 'https://rpc-mumbai.maticvigil.com',
+            chainId: 80001,
+            accounts: { mnemonic: mnemonic },
+        },
+
     },
     etherscan: {
         apiKey: etherScanApiKey,
